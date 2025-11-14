@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: canary-demo
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: canary-demo
+  template:
+    metadata:
+      labels:
+        app: canary-demo
+    spec:
+      containers:
+      - name: web-app
+        image: belo:blue
+        ports:
+        - containerPort: 5000
+        env:
+        - name: APP_VERSION
+          value: "v1.0.0"
+        - name: APP_COLOR
+          value: "blue"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+  strategy:
+    canary:
+      canaryService: canary-service
+      stableService: stable-service
+      steps:
+      - setWeight: 0
+      - pause: {}
+      - setWeight: 20
+      - pause: {}
+      - setWeight: 50
+      - pause: {}         
+      - setWeight: 100

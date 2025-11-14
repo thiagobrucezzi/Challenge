@@ -1,0 +1,15 @@
+k8s-deployment-strategies/
+├── apps/
+│   ├── app.py
+│   ├── requirements.txt
+│   └── Dockerfile
+├── manifests/
+│   ├── canary-rollout.yaml
+│   └── canary-service.yaml
+├── scripts/
+│   ├── setup.sh
+│   ├── install-argo-rollouts.sh
+│   ├── build-images.sh
+│   ├── deploy-canary.sh
+│   └── dashboard.sh
+└── README.md
